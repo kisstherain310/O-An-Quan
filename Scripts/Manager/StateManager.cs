@@ -24,12 +24,6 @@ public class StateManager : MonoBehaviour
     public GameObject flagBot;
     public GameObject[] Stage;
     public GameObject[] StageAct;
-
-    void Start()
-    {
-
-    }
-
     private void changeTurn()
     {
         if (turn == 1)
@@ -68,25 +62,32 @@ public class StateManager : MonoBehaviour
                 hand.hide();
             }
             if (curIndex + dir == 7 || curIndex + dir == 13) break;
-            if (PointModel.Ins.dsPoint[curIndex + dir] > 0)
+            int nextIndex = curIndex + dir;
+            if (nextIndex == 1) nextIndex = 13;
+            if (nextIndex == 14) nextIndex = 2;
+            if (PointModel.Ins.dsPoint[nextIndex] > 0) // choi tiep
             {
-                curIndex += dir;
+                curIndex = nextIndex;
                 times = PointModel.Ins.dsPoint[curIndex];
                 handleHand(curIndex);
                 yield return new WaitForSeconds(0.7f);
                 updateState(curIndex, 0);
             }
-            else if (PointModel.Ins.dsPoint[curIndex + dir] == 0)
+            else if (PointModel.Ins.dsPoint[nextIndex] == 0) // an
             {
-                int idxEat = curIndex + 2 * dir;
+                int idxEat = nextIndex + dir;
                 if (idxEat == 1) idxEat = 13;
                 if (idxEat == 14) idxEat = 2;
                 if (PointModel.Ins.dsPoint[idxEat] > 0)
                 {
                     handleHand(idxEat);
                     yield return new WaitForSeconds(0.5f);
+                    updateResult(idxEat); // them diem
                     updateState(idxEat, 0);
-                    if (PointModel.Ins.dsPoint[idxEat + dir] == 0)
+                    nextIndex = idxEat + dir;
+                    if (nextIndex == 1) nextIndex = 13;
+                    if (nextIndex == 14) nextIndex = 2;
+                    if (PointModel.Ins.dsPoint[nextIndex] == 0)
                     {
                         idxEat += 2 * dir;
                         if (idxEat == 1) idxEat = 13;
@@ -96,6 +97,7 @@ public class StateManager : MonoBehaviour
                             handleHand(idxEat);
                             yield return new WaitForSeconds(0.5f);
                             hand.hide();
+                            updateResult(idxEat);
                             updateState(idxEat, 0);
                         }
                     }
@@ -104,6 +106,55 @@ public class StateManager : MonoBehaviour
                 break;
             };
         }
+    }
+
+    private bool checkGameLose()
+    {
+        if (PointModel.Ins.dsPoint[7] == 0 && PointModel.Ins.dsPoint[13] == 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void checkOutOfStone()
+    {
+        if (PointModel.Ins.dsPoint[2] == 0 &&
+            PointModel.Ins.dsPoint[3] == 0 &&
+            PointModel.Ins.dsPoint[4] == 0 &&
+            PointModel.Ins.dsPoint[5] == 0 &&
+            PointModel.Ins.dsPoint[6] == 0
+        )
+        {
+            updateState(2, 1);
+            updateState(3, 1);
+            updateState(4, 1);
+            updateState(5, 1);
+            updateState(6, 1);
+            updateState(0, PointModel.Ins.dsPoint[0] - 5);
+        }
+        if (PointModel.Ins.dsPoint[8] == 0 &&
+            PointModel.Ins.dsPoint[9] == 0 &&
+            PointModel.Ins.dsPoint[10] == 0 &&
+            PointModel.Ins.dsPoint[11] == 0 &&
+            PointModel.Ins.dsPoint[12] == 0
+        )
+        {
+            updateState(8, 1);
+            updateState(9, 1);
+            updateState(10, 1);
+            updateState(11, 1);
+            updateState(12, 1);
+            updateState(1, PointModel.Ins.dsPoint[0] - 5);
+        }
+    }
+
+    private void updateResult(int index)
+    {
+        int indexNv = 2 - turn;
+        int newValue = PointModel.Ins.dsPoint[indexNv] + PointModel.Ins.dsPoint[index];
+        PointModel.Ins.updatePoint(indexNv, newValue);
+        PointManager.Ins.updateScore();
     }
 
     private void handleHand(int index)
@@ -156,7 +207,8 @@ public class StateManager : MonoBehaviour
 
     public void updatePosHand(int index)
     {
+        Vector3 newPos = Stage[index].transform.position;
         hand.show();
-        hand.updatePos(Stage[index].transform.position);
+        hand.updatePos(newPos);
     }
 }

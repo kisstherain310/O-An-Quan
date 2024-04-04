@@ -34,6 +34,11 @@ public class PointModel : MonoBehaviour
         dsPoint[13] = 10; // Quan 2
     }
 
+    public int getValue(int index)
+    {
+        return dsPoint[index];
+    }
+
     public void updatePoint(int index, int value)
     {
         dsPoint[index] = value;
