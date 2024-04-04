@@ -6,6 +6,7 @@ public class onClickArRight : MonoBehaviour
 {
     void OnMouseDown()
     {
-        
+        Debug.Log("on right");
+        StateManager.Ins.setDirect("right");
     }
 }
