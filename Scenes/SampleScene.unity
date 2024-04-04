@@ -555,7 +555,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &130781255
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1668,7 +1668,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 429813104}
-  - component: {fileID: 429813103}
   - component: {fileID: 429813105}
   m_Layer: 0
   m_Name: UIManager
@@ -1677,18 +1676,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &429813103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 429813102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f025774ff29a4748965778d39c7d420, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &429813104
 Transform:
   m_ObjectHideFlags: 0
@@ -4368,7 +4355,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1201298858}
-  - component: {fileID: 1201298857}
   - component: {fileID: 1201298859}
   m_Layer: 0
   m_Name: PointModel
@@ -4377,18 +4363,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1201298857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1201298856}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4dd463ba21674294daf2a77aca8e6625, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1201298858
 Transform:
   m_ObjectHideFlags: 0
@@ -6390,7 +6364,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1810196746}
-  - component: {fileID: 1810196745}
   - component: {fileID: 1810196747}
   m_Layer: 0
   m_Name: PointManager
@@ -6399,18 +6372,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1810196745
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1810196744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 921428976c5a80a4c9c4a9ed4c937ad1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1810196746
 Transform:
   m_ObjectHideFlags: 0

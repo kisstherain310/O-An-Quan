@@ -22,7 +22,6 @@ public class StateManager : MonoBehaviour
 
     void Start()
     {
-        hand.hide();
         this.hideDirect();
     }
 
