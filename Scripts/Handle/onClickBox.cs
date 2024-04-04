@@ -12,6 +12,7 @@ public class onClickBox : MonoBehaviour
 
     void handleState()
     {
+        if (PointModel.Ins.dsPoint[index] == 0) return;
         StateManager.Ins.getCurIndex(index);
         StateManager.Ins.updatePosHand(index);
         StateManager.Ins.showDirect(index);

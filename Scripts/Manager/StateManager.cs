@@ -15,11 +15,40 @@ public class StateManager : MonoBehaviour
         StateManager.ins = this;
     }
     private int curIndex;
+    private int turn = 2;
     public Hand hand;
     public GameObject direct;
+    public GameObject top;
+    public GameObject bot;
+    public GameObject flagTop;
+    public GameObject flagBot;
     public GameObject[] Stage;
     public GameObject[] StageAct;
 
+    void Start()
+    {
+
+    }
+
+    private void changeTurn()
+    {
+        if (turn == 1)
+        {
+            top.SetActive(false);
+            flagTop.SetActive(false);
+            bot.SetActive(true);
+            flagBot.SetActive(true);
+            turn = 2;
+        }
+        else if (turn == 2)
+        {
+            top.SetActive(true);
+            flagTop.SetActive(true);
+            bot.SetActive(false);
+            flagBot.SetActive(false);
+            turn = 1;
+        }
+    }
     public void getCurIndex(int index)
     {
         curIndex = index;
@@ -36,6 +65,7 @@ public class StateManager : MonoBehaviour
                 if (curIndex == 14) curIndex = 2;
                 handleAction(curIndex);
                 yield return new WaitForSeconds(0.49f);
+                hand.hide();
             }
             if (curIndex + dir == 7 || curIndex + dir == 13) break;
             if (PointModel.Ins.dsPoint[curIndex + dir] > 0)
@@ -46,12 +76,39 @@ public class StateManager : MonoBehaviour
                 yield return new WaitForSeconds(0.7f);
                 updateState(curIndex, 0);
             }
-            else if (PointModel.Ins.dsPoint[curIndex + dir] == 0) break;
+            else if (PointModel.Ins.dsPoint[curIndex + dir] == 0)
+            {
+                int idxEat = curIndex + 2 * dir;
+                if (idxEat == 1) idxEat = 13;
+                if (idxEat == 14) idxEat = 2;
+                if (PointModel.Ins.dsPoint[idxEat] > 0)
+                {
+                    handleHand(idxEat);
+                    yield return new WaitForSeconds(0.5f);
+                    updateState(idxEat, 0);
+                    if (PointModel.Ins.dsPoint[idxEat + dir] == 0)
+                    {
+                        idxEat += 2 * dir;
+                        if (idxEat == 1) idxEat = 13;
+                        if (idxEat == 14) idxEat = 2;
+                        if (PointModel.Ins.dsPoint[idxEat] > 0)
+                        {
+                            handleHand(idxEat);
+                            yield return new WaitForSeconds(0.5f);
+                            hand.hide();
+                            updateState(idxEat, 0);
+                        }
+                    }
+                    else hand.hide();
+                }
+                break;
+            };
         }
     }
 
     private void handleHand(int index)
     {
+        hand.show();
         hand.moveTo(Stage[index].transform.position);
     }
 
@@ -70,14 +127,13 @@ public class StateManager : MonoBehaviour
         else isTop = -1;
         if (dir == "left")
         {
-            Debug.Log("dir left");
             StartCoroutine(RepeatedAction(times, -1 * isTop));
         }
         else if (dir == "right")
         {
-            Debug.Log("dir right");
             StartCoroutine(RepeatedAction(times, 1 * isTop));
         }
+        changeTurn();
     }
 
     private void updateState(int index, int value)
