@@ -25,9 +25,19 @@ public class StateManager : MonoBehaviour
     public GameObject nv1Win;
     public GameObject nv2Win;
     public GameObject UIEndGame;
+    public GameObject gamePlay;
 
     public GameObject[] Stage;
     public GameObject[] StageAct;
+
+    void Start(){
+        UIManager.Ins.OnOpen(0);
+    }
+
+    public void openGamePlay()
+    {
+        gamePlay.SetActive(true);
+    }
     private void changeTurn()
     {
         if (turn == 1)

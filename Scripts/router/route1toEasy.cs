@@ -7,6 +7,6 @@ public class route1toEasy : MonoBehaviour
     void OnMouseDown()
     {
         UIManager.Ins.OnClose(1);
-        UIManager.Ins.OnOpen(3);
+        StateManager.Ins.openGamePlay();
     }
 }
