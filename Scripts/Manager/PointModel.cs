@@ -14,12 +14,12 @@ public class PointModel : MonoBehaviour
     void Awake()
     {
         PointModel.ins = this;
-        dsPoint = new int[14];
         initPoint();
     }
 
     void initPoint()
     {
+        dsPoint = new int[14];
         dsPoint[0] = 0; // nv1
         dsPoint[1] = 0; // nv2
         for (int i = 2; i < 7; i++)

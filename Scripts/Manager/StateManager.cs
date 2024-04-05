@@ -48,6 +48,29 @@ public class StateManager : MonoBehaviour
         curIndex = index;
     }
 
+    private int editIndex(int index)
+    {
+        if (index == 1) index = 13;
+        if (index == 14) index = 2;
+        return index;
+    }
+
+    private void onLoseGame()
+    {
+        top.SetActive(false);
+        bot.SetActive(false);
+    }
+
+    private void checkStateGame()
+    {
+        checkOutOfStone();
+        if (checkGameLose())
+        {
+            Debug.Log("thuaaaaaaaaaaaaaaaa");
+            onLoseGame();
+        }
+    }
+
     IEnumerator RepeatedAction(int times, int dir)
     {
         while (true)
@@ -55,16 +78,18 @@ public class StateManager : MonoBehaviour
             for (int i = 0; i < times; i++)
             {
                 curIndex += dir;
-                if (curIndex == 1) curIndex = 13;
-                if (curIndex == 14) curIndex = 2;
+                curIndex = editIndex(curIndex);
                 handleAction(curIndex);
-                yield return new WaitForSeconds(0.49f);
-                hand.hide();
+                yield return new WaitForSeconds(0.5f);
             }
-            if (curIndex + dir == 7 || curIndex + dir == 13) break;
+            hand.hide();
+            if (curIndex + dir == 7 || curIndex + dir == 13 || curIndex + dir == 1)
+            {
+                checkStateGame();
+                break;
+            }
             int nextIndex = curIndex + dir;
-            if (nextIndex == 1) nextIndex = 13;
-            if (nextIndex == 14) nextIndex = 2;
+            nextIndex = editIndex(nextIndex);
             if (PointModel.Ins.dsPoint[nextIndex] > 0) // choi tiep
             {
                 curIndex = nextIndex;
@@ -76,8 +101,7 @@ public class StateManager : MonoBehaviour
             else if (PointModel.Ins.dsPoint[nextIndex] == 0) // an
             {
                 int idxEat = nextIndex + dir;
-                if (idxEat == 1) idxEat = 13;
-                if (idxEat == 14) idxEat = 2;
+                idxEat = editIndex(idxEat);
                 if (PointModel.Ins.dsPoint[idxEat] > 0)
                 {
                     handleHand(idxEat);
@@ -85,13 +109,16 @@ public class StateManager : MonoBehaviour
                     updateResult(idxEat); // them diem
                     updateState(idxEat, 0);
                     nextIndex = idxEat + dir;
-                    if (nextIndex == 1) nextIndex = 13;
-                    if (nextIndex == 14) nextIndex = 2;
+                    nextIndex = editIndex(nextIndex);
+                    if (nextIndex == 7 || nextIndex == 13)
+                    {
+                        checkStateGame();
+                        break;
+                    }
                     if (PointModel.Ins.dsPoint[nextIndex] == 0)
                     {
                         idxEat += 2 * dir;
-                        if (idxEat == 1) idxEat = 13;
-                        if (idxEat == 14) idxEat = 2;
+                        idxEat = editIndex(idxEat);
                         if (PointModel.Ins.dsPoint[idxEat] > 0)
                         {
                             handleHand(idxEat);
@@ -99,10 +126,34 @@ public class StateManager : MonoBehaviour
                             hand.hide();
                             updateResult(idxEat);
                             updateState(idxEat, 0);
+                            nextIndex = idxEat + dir;
+                            nextIndex = editIndex(nextIndex);
+                            if (nextIndex == 7 || nextIndex == 13)
+                            {
+                                checkStateGame();
+                                break;
+                            }
+                            if (PointModel.Ins.dsPoint[nextIndex] == 0)
+                            {
+                                idxEat += 2 * dir;
+                                idxEat = editIndex(idxEat);
+                                if (PointModel.Ins.dsPoint[idxEat] > 0)
+                                {
+                                    handleHand(idxEat);
+                                    yield return new WaitForSeconds(0.5f);
+                                    hand.hide();
+                                    updateResult(idxEat);
+                                    updateState(idxEat, 0);
+                                }
+                                else hand.hide();
+                                checkStateGame();
+                            }
+                            else hand.hide();
                         }
                     }
                     else hand.hide();
                 }
+                checkStateGame();
                 break;
             };
         }
@@ -131,7 +182,7 @@ public class StateManager : MonoBehaviour
             updateState(4, 1);
             updateState(5, 1);
             updateState(6, 1);
-            updateState(0, PointModel.Ins.dsPoint[0] - 5);
+            updateUI(0, PointModel.Ins.dsPoint[0] - 5);
         }
         if (PointModel.Ins.dsPoint[8] == 0 &&
             PointModel.Ins.dsPoint[9] == 0 &&
@@ -145,7 +196,7 @@ public class StateManager : MonoBehaviour
             updateState(10, 1);
             updateState(11, 1);
             updateState(12, 1);
-            updateState(1, PointModel.Ins.dsPoint[0] - 5);
+            updateUI(1, PointModel.Ins.dsPoint[0] - 5);
         }
     }
 
@@ -184,15 +235,22 @@ public class StateManager : MonoBehaviour
         {
             StartCoroutine(RepeatedAction(times, 1 * isTop));
         }
+        hand.hide();
         changeTurn();
+    }
+
+    private void updateUI(int index, int value)
+    {
+        PointModel.Ins.updatePoint(index, value);
+        PointManager.Ins.updateScore();
     }
 
     private void updateState(int index, int value)
     {
+        index = editIndex(index);
         if (value > 0) Stage[index].SetActive(true);
         else if (value == 0) Stage[index].SetActive(false);
-        PointModel.Ins.updatePoint(index, value);
-        PointManager.Ins.updateScore();
+        updateUI(index, value);
     }
 
     public void showDirect(int index)
