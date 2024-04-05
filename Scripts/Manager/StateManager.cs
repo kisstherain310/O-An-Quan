@@ -22,6 +22,10 @@ public class StateManager : MonoBehaviour
     public GameObject bot;
     public GameObject flagTop;
     public GameObject flagBot;
+    public GameObject nv1Win;
+    public GameObject nv2Win;
+    public GameObject UIEndGame;
+
     public GameObject[] Stage;
     public GameObject[] StageAct;
     private void changeTurn()
@@ -59,6 +63,15 @@ public class StateManager : MonoBehaviour
     {
         top.SetActive(false);
         bot.SetActive(false);
+        if (PointModel.Ins.dsPoint[0] > PointModel.Ins.dsPoint[1])
+        {
+            nv1Win.SetActive(true);
+        }
+        else
+        {
+            nv2Win.SetActive(false);
+        }
+        UIEndGame.SetActive(true);
     }
 
     private void checkStateGame()
@@ -66,7 +79,6 @@ public class StateManager : MonoBehaviour
         checkOutOfStone();
         if (checkGameLose())
         {
-            Debug.Log("thuaaaaaaaaaaaaaaaa");
             onLoseGame();
         }
     }
@@ -235,7 +247,6 @@ public class StateManager : MonoBehaviour
         {
             StartCoroutine(RepeatedAction(times, 1 * isTop));
         }
-        hand.hide();
         changeTurn();
     }
 
