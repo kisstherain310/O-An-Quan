@@ -18,7 +18,7 @@ public class Hand : MonoBehaviour
     }
     public void moveTo(Vector3 newPos)
     {
-        StartCoroutine(MoveToTarget(newPos, 0.35f));
+        StartCoroutine(MoveToTarget(newPos, 0.2f));
     }
 
     IEnumerator MoveToTarget(Vector3 targetPos, float duration)

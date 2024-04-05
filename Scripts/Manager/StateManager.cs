@@ -65,17 +65,18 @@ public class StateManager : MonoBehaviour
         bot.SetActive(false);
         if (PointModel.Ins.dsPoint[0] > PointModel.Ins.dsPoint[1])
         {
-            nv1Win.SetActive(true);
+            nv2Win.SetActive(true);
         }
         else
         {
-            nv2Win.SetActive(false);
+            nv1Win.SetActive(true);
         }
         UIEndGame.SetActive(true);
     }
 
     private void checkStateGame()
     {
+        hand.hide();
         checkOutOfStone();
         if (checkGameLose())
         {
@@ -107,7 +108,7 @@ public class StateManager : MonoBehaviour
                 curIndex = nextIndex;
                 times = PointModel.Ins.dsPoint[curIndex];
                 handleHand(curIndex);
-                yield return new WaitForSeconds(0.7f);
+                yield return new WaitForSeconds(1f);
                 updateState(curIndex, 0);
             }
             else if (PointModel.Ins.dsPoint[nextIndex] == 0) // an
@@ -122,7 +123,7 @@ public class StateManager : MonoBehaviour
                     updateState(idxEat, 0);
                     nextIndex = idxEat + dir;
                     nextIndex = editIndex(nextIndex);
-                    if (nextIndex == 7 || nextIndex == 13)
+                    if (idxEat + dir == 7 || idxEat + dir == 13 || idxEat + dir == 1)
                     {
                         checkStateGame();
                         break;
@@ -140,7 +141,7 @@ public class StateManager : MonoBehaviour
                             updateState(idxEat, 0);
                             nextIndex = idxEat + dir;
                             nextIndex = editIndex(nextIndex);
-                            if (nextIndex == 7 || nextIndex == 13)
+                            if (idxEat + dir == 7 || idxEat + dir == 13 || idxEat + dir == 1)
                             {
                                 checkStateGame();
                                 break;
@@ -182,7 +183,8 @@ public class StateManager : MonoBehaviour
 
     private void checkOutOfStone()
     {
-        if (PointModel.Ins.dsPoint[2] == 0 &&
+        if (turn == 1 &&
+            PointModel.Ins.dsPoint[2] == 0 &&
             PointModel.Ins.dsPoint[3] == 0 &&
             PointModel.Ins.dsPoint[4] == 0 &&
             PointModel.Ins.dsPoint[5] == 0 &&
@@ -196,7 +198,8 @@ public class StateManager : MonoBehaviour
             updateState(6, 1);
             updateUI(0, PointModel.Ins.dsPoint[0] - 5);
         }
-        if (PointModel.Ins.dsPoint[8] == 0 &&
+        if (turn == 2 &&
+            PointModel.Ins.dsPoint[8] == 0 &&
             PointModel.Ins.dsPoint[9] == 0 &&
             PointModel.Ins.dsPoint[10] == 0 &&
             PointModel.Ins.dsPoint[11] == 0 &&
