@@ -21,7 +21,7 @@ public class PointManager : MonoBehaviour
         initScore();
     }
 
-    private void initScore()
+    public void initScore()
     {
         for (int i = 0; i < 14; i++)
         {

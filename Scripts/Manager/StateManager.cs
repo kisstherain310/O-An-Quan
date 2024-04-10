@@ -30,13 +30,31 @@ public class StateManager : MonoBehaviour
     public GameObject[] Stage;
     public GameObject[] StageAct;
 
-    void Start(){
+    void Start()
+    {
         UIManager.Ins.OnOpen(0);
     }
 
     public void openGamePlay()
     {
         gamePlay.SetActive(true);
+        bot.SetActive(true);
+    }
+    public void closeGamePlay()
+    {
+        gamePlay.SetActive(false);
+    }
+    public void resetStage()
+    {
+        turn = 1;
+        UIEndGame.SetActive(false);
+        changeTurn();
+        nv1Win.SetActive(false);
+        nv2Win.SetActive(false);
+        for (int i = 2; i < 14; i++)
+        {
+            Stage[i].SetActive(true);
+        }
     }
     private void changeTurn()
     {
@@ -66,6 +84,8 @@ public class StateManager : MonoBehaviour
     {
         if (index == 1) index = 13;
         if (index == 14) index = 2;
+        if (index == 15) index = 3;
+        if (index == 0) index = 12;
         return index;
     }
 
@@ -103,7 +123,7 @@ public class StateManager : MonoBehaviour
                 curIndex += dir;
                 curIndex = editIndex(curIndex);
                 handleAction(curIndex);
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.4f);
             }
             hand.hide();
             if (curIndex + dir == 7 || curIndex + dir == 13 || curIndex + dir == 1)
@@ -118,7 +138,7 @@ public class StateManager : MonoBehaviour
                 curIndex = nextIndex;
                 times = PointModel.Ins.dsPoint[curIndex];
                 handleHand(curIndex);
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(0.6f);
                 updateState(curIndex, 0);
             }
             else if (PointModel.Ins.dsPoint[nextIndex] == 0) // an
@@ -128,7 +148,7 @@ public class StateManager : MonoBehaviour
                 if (PointModel.Ins.dsPoint[idxEat] > 0)
                 {
                     handleHand(idxEat);
-                    yield return new WaitForSeconds(0.5f);
+                    yield return new WaitForSeconds(0.4f);
                     updateResult(idxEat); // them diem
                     updateState(idxEat, 0);
                     nextIndex = idxEat + dir;
@@ -145,7 +165,7 @@ public class StateManager : MonoBehaviour
                         if (PointModel.Ins.dsPoint[idxEat] > 0)
                         {
                             handleHand(idxEat);
-                            yield return new WaitForSeconds(0.5f);
+                            yield return new WaitForSeconds(0.4f);
                             hand.hide();
                             updateResult(idxEat);
                             updateState(idxEat, 0);
@@ -163,10 +183,32 @@ public class StateManager : MonoBehaviour
                                 if (PointModel.Ins.dsPoint[idxEat] > 0)
                                 {
                                     handleHand(idxEat);
-                                    yield return new WaitForSeconds(0.5f);
+                                    yield return new WaitForSeconds(0.4f);
                                     hand.hide();
                                     updateResult(idxEat);
                                     updateState(idxEat, 0);
+                                    nextIndex = idxEat + dir;
+                                    nextIndex = editIndex(nextIndex);
+                                    if (idxEat + dir == 7 || idxEat + dir == 13 || idxEat + dir == 1)
+                                    {
+                                        checkStateGame();
+                                        break;
+                                    }
+                                    if (PointModel.Ins.dsPoint[nextIndex] == 0)
+                                    {
+                                        idxEat += 2 * dir;
+                                        idxEat = editIndex(idxEat);
+                                        if (PointModel.Ins.dsPoint[idxEat] > 0)
+                                        {
+                                            handleHand(idxEat);
+                                            yield return new WaitForSeconds(0.4f);
+                                            hand.hide();
+                                            updateResult(idxEat);
+                                            updateState(idxEat, 0);
+                                        }
+                                        else hand.hide();
+                                        checkStateGame();
+                                    }
                                 }
                                 else hand.hide();
                                 checkStateGame();
