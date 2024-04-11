@@ -6,14 +6,14 @@ public class BanCo
     public int goal_1 = 0;
     public int goal_2 = 0;
 
-    // Hàm lấy board
-    public int[] GetBoard()
+    // ham get board
+    public int[] getBoard()
     {
         return board;
     }
 
-    // Hàm set board
-    public void SetBoard(int[] arr)
+    // set board
+    public void setBoard(int[] arr)
     {
         for (int i = 0; i < 12; i++)
         {
@@ -21,28 +21,28 @@ public class BanCo
         }
     }
 
-    public void SetBoardByIdx(int idx, int value)
+    public void setBoardByIdx(int idx, int value)
     {
         board[idx] = value;
     }
 
-    // Hàm khởi tạo BanCo
+    // ham khoi tao BanCo
     public BanCo()
     {
         for (int i = 0; i < 12; i++)
         {
             if (i == 5 || i == 11)
             {
-                board[i] = 10; // Quân là 10
+                board[i] = 10; // Quan la 10
             }
             else
             {
-                board[i] = 5; // Dân là 5
+                board[i] = 5; // Dan la 5
             }
         }
     }
 
-    // Hàm khởi tạo board với đầu vào là mảng 14 phần tử
+    //  ham khoi tao board voi dau vao la mang 14 phan tu
     public BanCo(int[] arr, int num)
     {
         for (int i = 2; i < 14; i++)
@@ -51,7 +51,8 @@ public class BanCo
         }
     }
 
-    // Hàm khởi tạo board với đầu vào là mảng 12 phần tử
+
+    //  ham khoi tao board voi dau vao la mang 12 phan tu
     public BanCo(int[] arr)
     {
         for (int i = 0; i < 12; i++)
@@ -60,9 +61,11 @@ public class BanCo
         }
     }
 
-    // In bàn cờ
+    // In ban co
 
-    // Chơi cờ
+
+
+    // choi co
     public int Move(int index, int clockwise)
     {
         if (index < 0 || index > 11)
@@ -78,6 +81,7 @@ public class BanCo
             return 0;
         }
 
+
         int temp = 0;
         int i = index;
         int step;
@@ -85,11 +89,11 @@ public class BanCo
 
         if (clockwise == 1)
         {
-            step = 1;  // Theo chiều kim đồng hồ
+            step = 1;  // Theo chieu kim dong ho
         }
         else
         {
-            step = -1; // Ngược chiều kim đồng hồ
+            step = -1; // nguoc chieu kim dong ho
         }
 
         // Rải quân
@@ -112,9 +116,9 @@ public class BanCo
             {
                 i += 12;
             }
-        }
 
-        // Rải hết quân  => đến ô trống đầu tiên
+        }
+        // rải hết quân  => đến ô trống đầu tiên
         int j = (i + step) % 12;
         if (j < 0)
         {
@@ -135,7 +139,9 @@ public class BanCo
             {
                 j += 12;
             }
+            // PrintBoardTestMove();
         }
+
 
         return reward;
     }

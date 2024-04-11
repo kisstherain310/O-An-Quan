@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Ai : MonoBehaviour
 {
@@ -8,13 +9,13 @@ public class Ai : MonoBehaviour
     // player 1: Người chơi
     // player 2: Máy chơi
 
-    public static bool CheckEmpty(int[] board, int player)
+    public static bool checkEmpty(int[] board, int player)
     {
         if (player == 1)
         {
             for (int i = 6; i < 11; i++) // Xét các ô của người từ 6 đến 10
             {
-                if (board[i] > 0)  // nếu ô còn dân
+                if (board[i] > 0)  // neu o con dan
                 {
                     return false;
                 }
@@ -24,7 +25,7 @@ public class Ai : MonoBehaviour
         {
             for (int i = 0; i < 5; i++) // Xét các ô của máy từ 0 đến 4
             {
-                if (board[i] > 0)  // nếu ô còn dân
+                if (board[i] > 0)  // neu o con dan
                 {
                     return false;
                 }
@@ -36,18 +37,18 @@ public class Ai : MonoBehaviour
     public static void UpdateEmptyBoard(BanCo boardTemp)
     {
 
-        if (CheckEmpty(boardTemp.GetBoard(), 2))
+        if (checkEmpty(boardTemp.getBoard(), 2))
         {
             for (int k = 0; k < 5; k++) // Xét các ô của người từ 6 đến 10
             {
-                boardTemp.SetBoardByIdx(k, 1);
+                boardTemp.setBoardByIdx(k, 1);
             }
         }
-        if (CheckEmpty(boardTemp.GetBoard(), 1))
+        if (checkEmpty(boardTemp.getBoard(), 1))
         {
             for (int k = 6; k < 11; k++) // Xét các ô của người từ 6 đến 10
             {
-                boardTemp.SetBoardByIdx(k, 1);
+                boardTemp.setBoardByIdx(k, 1);
             }
         }
     }
@@ -60,40 +61,31 @@ public class Ai : MonoBehaviour
         Board.goal_2 = arr[1];
 
         List<int> lsBox = new List<int>(); // list box còn dân
-
-        // Xét các ô còn dân
         if (player == 1)
         {
             for (int i = 6; i < 11; i++) // Xét các ô của người từ 6 đến 10
             {
-                if (Board.GetBoard()[i] > 0)  // neu o con dan
+                if (Board.getBoard()[i] > 0)  // neu o con dan
                 {
                     lsBox.Add(i);
                 }
             }
         }
-        else if (player == 2)
+        else
         {
             for (int i = 0; i < 5; i++) // Xét các ô của máy từ 0 đến 4
             {
-                if (Board.GetBoard()[i] > 0)  // neu o con dan
+                if (Board.getBoard()[i] > 0)  // neu o con dan
                 {
                     lsBox.Add(i);
                 }
             }
         }
 
-        // Tạo một đối tượng Random
         System.Random rd = new System.Random();
 
-        // Sử dụng đối tượng Random để sinh số ngẫu nhiên
-        int randomIndex = rd.Next(0, lsBox.Count);
-        int randomClockwise = rd.Next(0, 2);
-
-        return new int[] { lsBox[randomIndex], randomClockwise };
+        return new int[] { lsBox[rd.Next(0, lsBox.Count)], rd.Next(0, 2) }; // random 1 ô và chiều bất kỳ
     }
-
-
 
 
     public static int[] MediumAi(int[] arr, int player)
@@ -102,7 +94,7 @@ public class Ai : MonoBehaviour
         Board.goal_1 = arr[0];
         Board.goal_2 = arr[1];
 
-        int[] board = (int[])Board.GetBoard().Clone();
+        int[] board = (int[])Board.getBoard().Clone();
         List<int> lsBox = new List<int>(); // list box còn dân
 
         // Xét các ô còn dân
@@ -110,7 +102,7 @@ public class Ai : MonoBehaviour
         {
             for (int i = 6; i < 11; i++) // Xét các ô của người từ 6 đến 10
             {
-                if (Board.GetBoard()[i] > 0)  // nếu ô còn dân
+                if (Board.getBoard()[i] > 0)  // neu o con dan
                 {
                     lsBox.Add(i);
                 }
@@ -120,7 +112,7 @@ public class Ai : MonoBehaviour
         {
             for (int i = 0; i < 5; i++) // Xét các ô của máy từ 0 đến 4
             {
-                if (Board.GetBoard()[i] > 0)  // nếu ô còn dân
+                if (Board.getBoard()[i] > 0)  // neu o con dan
                 {
                     lsBox.Add(i);
                 }
@@ -133,7 +125,7 @@ public class Ai : MonoBehaviour
         {
             for (int j = 0; j < 2; j++)  // Duyệt 2 chiều quay
             {
-                BanCo boardTemp = new BanCo(board);   // Khởi tạo bàn cờ tạm để thử
+                BanCo boardTemp = new BanCo(board);   // Khởi tạo bàn cờ tạm đế đi thử
                 int reward = boardTemp.Move(i, j);  // Di chuyển quân ở ô i theo chiều j, điểm số sau lượt đi lưu vào biến reward
                 if (!map.ContainsKey(reward))  // Nếu chưa có key reward trong map
                 {
@@ -143,8 +135,11 @@ public class Ai : MonoBehaviour
             }
         }
 
-        List<Choice> firstList = map.GetEnumerator().Current.Value; // Lấy list dự đoán có điểm số cao nhất
-        Choice choice = firstList[Random.Range(0, firstList.Count)];
+
+
+        List<Choice> firstList = map.FirstOrDefault().Value; // Lấy list dự đoán có điêm số cao nhất
+        System.Random rd = new System.Random();
+        Choice choice = firstList[rd.Next(0, firstList.Count)];
 
         return new int[] { choice.getIndex(), choice.getClockwise() }; // Random 1 trong các dự đoán
     }
@@ -156,7 +151,7 @@ public class Ai : MonoBehaviour
         arr[1] = banCo.goal_2;
         for (int i = 2; i < 14; i++)
         {
-            arr[i] = banCo.GetBoard()[i - 2];
+            arr[i] = banCo.getBoard()[i - 2];
         }
         return arr;
     }
@@ -168,7 +163,7 @@ public class Ai : MonoBehaviour
         Board.goal_1 = arr[0];
         Board.goal_2 = arr[1];
 
-        int[] board = (int[])Board.GetBoard().Clone();
+        int[] board = (int[])Board.getBoard().Clone();
         List<int> lsBox = new List<int>(); // list box còn dân
 
 
@@ -176,7 +171,7 @@ public class Ai : MonoBehaviour
         {
             for (int i = 6; i < 11; i++) // Xét các ô của người từ 6 đến 10
             {
-                if (Board.GetBoard()[i] > 0)  // nếu ô còn dân
+                if (Board.getBoard()[i] > 0)  // neu o con dan
                 {
                     lsBox.Add(i);
                 }
@@ -186,7 +181,7 @@ public class Ai : MonoBehaviour
         {
             for (int i = 0; i < 5; i++) // Xét các ô của máy từ 0 đến 4
             {
-                if (Board.GetBoard()[i] > 0)  // nếu ô còn dân
+                if (Board.getBoard()[i] > 0)  // neu o con dan
                 {
                     lsBox.Add(i);
                 }
@@ -221,8 +216,9 @@ public class Ai : MonoBehaviour
             }
         }
 
-        List<Choice> firstList = map.GetEnumerator().Current.Value; // Lấy list dự đoán có điểm số cao nhất
-        choice = firstList[Random.Range(0, firstList.Count)];
+        List<Choice> firstList = map.FirstOrDefault().Value; // Lấy list dự đoán có điêm số cao nhất
+        System.Random rd = new System.Random();
+        choice = firstList[rd.Next(0, firstList.Count)];
         return new int[] { choice.getIndex(), choice.getClockwise() }; // Random 1 trong các dự đoán
     }
 }

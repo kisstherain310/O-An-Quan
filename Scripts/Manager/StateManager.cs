@@ -168,29 +168,33 @@ public class StateManager : MonoBehaviour
         updateState(curIndex, 0);
         if (dir == "left")
         {
-            StartCoroutine(RepeatedAction(times, 1));
+            StartCoroutine(WaitForRepeatedActionCompletion(times, 1));
         }
         else if (dir == "right")
         {
-            StartCoroutine(RepeatedAction(times, -1));
+            StartCoroutine(WaitForRepeatedActionCompletion(times, -1));
         }
         changeTurn();
-
-        // AI
-        // StartCoroutine(DelayedAIPlay());
-        // AIPlay();
     }
 
-    // private IEnumerator DelayedAIPlay()
-    // {
-    //     yield return new WaitForSeconds(2f); // Chờ 2 giây
-    //     AIPlay(); // Gọi hàm AIPlay sau khi chờ
-    // }
+    private IEnumerator WaitForRepeatedActionCompletion(int times, int direction)
+    {
+        yield return StartCoroutine(RepeatedAction(times, direction)); // Chờ đợi cho đến khi RepeatedAction hoàn thành
+
+        // Sau khi RepeatedAction hoàn thành, thực hiện DelayedAIPlay
+        StartCoroutine(DelayedAIPlay());
+    }
+
+    private IEnumerator DelayedAIPlay()
+    {
+        yield return new WaitForSeconds(1f); // Chờ 1 giây
+        AIPlay(); // Gọi hàm AIPlay sau khi chờ
+    }
 
     private void AIPlay()
     {
         int[] resultAI = HandleAI.Ins.handle(typeGame);
-        int indexAI = resultAI[0];
+        int indexAI = resultAI[0] + 2;
         int dirAI = resultAI[1];
         getCurIndex(indexAI);
         updatePosHand(indexAI);
