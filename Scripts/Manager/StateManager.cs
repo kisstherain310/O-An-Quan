@@ -193,6 +193,7 @@ public class StateManager : MonoBehaviour
 
     private void AIPlay()
     {
+        checkGameLose();
         int[] resultAI = HandleAI.Ins.handle(typeGame);
         int indexAI = resultAI[0] + 2;
         int dirAI = resultAI[1];

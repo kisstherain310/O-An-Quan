@@ -16,6 +16,7 @@ public class PointManager : MonoBehaviour
     }
     public TextMeshProUGUI[] listScoreText;
     public stoneChangeUI[] listUIStone;
+    public BigStoneChangeUI[] listUIBigStone;
 
     void Start()
     {
@@ -42,6 +43,7 @@ public class PointManager : MonoBehaviour
             if (i >= 2) setEnabledText(i);
             listScoreText[i].text = PointModel.Ins.dsPoint[i].ToString();
             if (listUIStone[i] != null) listUIStone[i].changeSprite(PointModel.Ins.dsPoint[i]);
+            if (listUIBigStone[i] != null) listUIBigStone[i].changeSprite(PointModel.Ins.dsPoint[i]);
         }
     }
 }
