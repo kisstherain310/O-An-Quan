@@ -79,6 +79,11 @@ public class StateManager : MonoBehaviour
                 bot.SetActive(false);
                 flagBot.SetActive(false);
             }
+            else
+            {
+                bot.SetActive(false);
+                flagBot.SetActive(false);
+            }
             turn = 1;
         }
     }
@@ -134,17 +139,8 @@ public class StateManager : MonoBehaviour
                 caseDuo(dir);
                 break;
 
-            case "easy":
-                caseEasy(dir);
-                break;
-
-            case "medium":
-                break;
-
-            case "hard":
-                break;
-
             default:
+                caseBot(dir);
                 break;
         }
     }
@@ -165,8 +161,9 @@ public class StateManager : MonoBehaviour
         }
         changeTurn();
     }
-    private void caseEasy(string dir)
+    private void caseBot(string dir)
     {
+        isBot = true;
         int times = PointModel.Ins.dsPoint[curIndex];
         updateState(curIndex, 0);
         if (dir == "left")
@@ -179,10 +176,35 @@ public class StateManager : MonoBehaviour
         }
         changeTurn();
 
-        // int[] resultAI = HandleAI.Ins.handle(typeGame);
-        // Truy cập các phần tử của mảng kết quả
-        // int index = resultAI[0];
-        // int dir = resultAI[1];
+        // AI
+        // StartCoroutine(DelayedAIPlay());
+        // AIPlay();
+    }
+
+    // private IEnumerator DelayedAIPlay()
+    // {
+    //     yield return new WaitForSeconds(2f); // Chờ 2 giây
+    //     AIPlay(); // Gọi hàm AIPlay sau khi chờ
+    // }
+
+    private void AIPlay()
+    {
+        int[] resultAI = HandleAI.Ins.handle(typeGame);
+        int indexAI = resultAI[0];
+        int dirAI = resultAI[1];
+        getCurIndex(indexAI);
+        updatePosHand(indexAI);
+        int times = PointModel.Ins.dsPoint[curIndex];
+        updateState(curIndex, 0);
+        if (dirAI == 0)
+        {
+            StartCoroutine(RepeatedAction(times, -1));
+        }
+        else if (dirAI == 1)
+        {
+            StartCoroutine(RepeatedAction(times, 1));
+        }
+        changeTurn();
     }
     IEnumerator RepeatedAction(int times, int dir)
     {
