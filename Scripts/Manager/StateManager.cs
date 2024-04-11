@@ -16,6 +16,8 @@ public class StateManager : MonoBehaviour
     }
     private int curIndex;
     private int turn = 2;
+    private bool isBot = false;
+    private string typeGame = "";
     public Hand hand;
     public GameObject direct;
     public GameObject top;
@@ -43,6 +45,8 @@ public class StateManager : MonoBehaviour
     public void closeGamePlay()
     {
         gamePlay.SetActive(false);
+        bot.SetActive(false);
+        top.SetActive(false);
     }
     public void resetStage()
     {
@@ -68,10 +72,13 @@ public class StateManager : MonoBehaviour
         }
         else if (turn == 2)
         {
-            top.SetActive(true);
-            flagTop.SetActive(true);
-            bot.SetActive(false);
-            flagBot.SetActive(false);
+            if (!isBot)
+            { // neu la nguoi
+                top.SetActive(true);
+                flagTop.SetActive(true);
+                bot.SetActive(false);
+                flagBot.SetActive(false);
+            }
             turn = 1;
         }
     }
@@ -114,6 +121,69 @@ public class StateManager : MonoBehaviour
         }
     }
 
+    public void setTypeGame(string type)
+    {
+        this.typeGame = type;
+    }
+    public void setDirect(string dir)
+    {
+        hideDirect();
+        switch (typeGame)
+        {
+            case "duo":
+                caseDuo(dir);
+                break;
+
+            case "easy":
+                caseEasy(dir);
+                break;
+
+            case "medium":
+                break;
+
+            case "hard":
+                break;
+
+            default:
+                break;
+        }
+    }
+    private void caseDuo(string dir)
+    {
+        int times = PointModel.Ins.dsPoint[curIndex];
+        int isTop = 1;
+        updateState(curIndex, 0);
+        if (2 <= curIndex && curIndex <= 6) isTop = 1;
+        else isTop = -1;
+        if (dir == "left")
+        {
+            StartCoroutine(RepeatedAction(times, -1 * isTop));
+        }
+        else if (dir == "right")
+        {
+            StartCoroutine(RepeatedAction(times, 1 * isTop));
+        }
+        changeTurn();
+    }
+    private void caseEasy(string dir)
+    {
+        int times = PointModel.Ins.dsPoint[curIndex];
+        updateState(curIndex, 0);
+        if (dir == "left")
+        {
+            StartCoroutine(RepeatedAction(times, 1));
+        }
+        else if (dir == "right")
+        {
+            StartCoroutine(RepeatedAction(times, -1));
+        }
+        changeTurn();
+
+        // int[] resultAI = HandleAI.Ins.handle(typeGame);
+        // Truy cập các phần tử của mảng kết quả
+        // int index = resultAI[0];
+        // int dir = resultAI[1];
+    }
     IEnumerator RepeatedAction(int times, int dir)
     {
         while (true)
@@ -286,24 +356,7 @@ public class StateManager : MonoBehaviour
         handleHand(index);
         updateState(index, PointModel.Ins.dsPoint[index] + 1);
     }
-    public void setDirect(string dir)
-    {
-        hideDirect();
-        int times = PointModel.Ins.dsPoint[curIndex];
-        int isTop = 1;
-        updateState(curIndex, 0);
-        if (2 <= curIndex && curIndex <= 6) isTop = 1;
-        else isTop = -1;
-        if (dir == "left")
-        {
-            StartCoroutine(RepeatedAction(times, -1 * isTop));
-        }
-        else if (dir == "right")
-        {
-            StartCoroutine(RepeatedAction(times, 1 * isTop));
-        }
-        changeTurn();
-    }
+
 
     private void updateUI(int index, int value)
     {

@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class route1toEasy : MonoBehaviour
+public class route1toMedium : MonoBehaviour
 {
-    private string typeGame = "easy";
+    private string typeGame = "medium";
     void OnMouseDown()
     {
         UIManager.Ins.OnClose(1);
