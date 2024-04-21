@@ -17,6 +17,7 @@ public class StateManager : MonoBehaviour
     private int curIndex;
     private int turn = 2;
     private bool isBot = false;
+    private bool isLoseGame = false;
     private string typeGame = "";
     public Hand hand;
     public GameObject direct;
@@ -51,6 +52,7 @@ public class StateManager : MonoBehaviour
     public void resetStage()
     {
         turn = 1;
+        isLoseGame = false;
         UIEndGame.SetActive(false);
         changeTurn();
         nv1Win.SetActive(false);
@@ -123,6 +125,7 @@ public class StateManager : MonoBehaviour
         if (checkGameLose())
         {
             onLoseGame();
+            isLoseGame = true;
         }
     }
 
@@ -182,7 +185,7 @@ public class StateManager : MonoBehaviour
         yield return StartCoroutine(RepeatedAction(times, direction)); // Chờ đợi cho đến khi RepeatedAction hoàn thành
 
         // Sau khi RepeatedAction hoàn thành, thực hiện DelayedAIPlay
-        StartCoroutine(DelayedAIPlay());
+        if (!isLoseGame) StartCoroutine(DelayedAIPlay());
     }
 
     private IEnumerator DelayedAIPlay()
@@ -398,6 +401,7 @@ public class StateManager : MonoBehaviour
 
     private void checkOutOfStone()
     {
+        if (isLoseGame) return;
         if (turn == 1 &&
             PointModel.Ins.dsPoint[2] == 0 &&
             PointModel.Ins.dsPoint[3] == 0 &&
