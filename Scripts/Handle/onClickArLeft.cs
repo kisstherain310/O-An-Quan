@@ -2,28 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-
+using UnityEngine.UI;
 public class onClickArLeft : NetworkBehaviour
 {
-    void OnMouseDown()
+    private void OnMouseDown()
     {
         if (IsClient)
         {
-            SubmitServerRpc();
+            handleStateServerRpc();
         }
         else
         {
-            UpdateClientRpc();
+            handleStateClientRpc();
         }
     }
+
     [ServerRpc(RequireOwnership = false)]
-    private void SubmitServerRpc()
+    private void handleStateServerRpc()
     {
-        UpdateClientRpc();
+        handleStateClientRpc();
     }
 
     [ClientRpc]
-    private void UpdateClientRpc()
+    private void handleStateClientRpc()
+    {
+        handleState();
+    }
+
+    private void handleState()
     {
         StateManager.Ins.setDirect("left");
     }

@@ -149,6 +149,7 @@ public class StateManager : MonoBehaviour
     }
     private void caseDuo(string dir)
     {
+        isBot = false;
         int times = PointModel.Ins.dsPoint[curIndex];
         int isTop = 1;
         updateState(curIndex, 0);

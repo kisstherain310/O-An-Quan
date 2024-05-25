@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class UINetwork : MonoBehaviour
 {
-    private static string typeGame = "easy";
+    private static string typeGame = "duo";
     void OnGUI()
     {
-        GUILayout.BeginArea(new Rect(10, 10, 300, 300));
+        GUILayout.BeginArea(new Rect(130, 30, 300, 2000));
 
         if (!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
         {

@@ -12,13 +12,10 @@ public class onClickBox : NetworkBehaviour
     {
         if (IsClient)
         {
-            Debug.Log(index);
-            Debug.Log("server");
             handleStateServerRpc();
         }
         else
         {
-            Debug.Log("client");
             handleStateClientRpc();
         }
     }
@@ -41,6 +38,13 @@ public class onClickBox : NetworkBehaviour
         StateManager.Ins.getCurIndex(index);
         StateManager.Ins.updatePosHand(index);
         StateManager.Ins.showDirect(index);
+        StartCoroutine(Raida());
+    }
+    IEnumerator Raida()
+    {
+        yield return new WaitForSeconds(1);
+        if (index % 2 == 0) StateManager.Ins.setDirect("left");
+        else StateManager.Ins.setDirect("right");
     }
 }
 
