@@ -436,6 +436,7 @@ public class StateManager : MonoBehaviour
 
     private void updateResult(int index)
     {
+        if (isLoseGame) return;
         int indexNv = 2 - turn;
         int newValue = PointModel.Ins.dsPoint[indexNv] + PointModel.Ins.dsPoint[index];
         PointModel.Ins.updatePoint(indexNv, newValue);
