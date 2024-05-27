@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
 public class route1toEasy : MonoBehaviour
 {
@@ -10,5 +11,6 @@ public class route1toEasy : MonoBehaviour
         UIManager.Ins.OnClose(1);
         StateManager.Ins.setTypeGame(typeGame);
         StateManager.Ins.openGamePlay();
+        NetworkManager.Singleton.StartHost();
     }
 }
